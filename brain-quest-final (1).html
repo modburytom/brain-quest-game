@@ -1,0 +1,1762 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brain Quest - 끝없는 도전! 🧠</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+            user-select: none;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        /* 헤더 */
+        .header {
+            text-align: center;
+            padding: 15px 0;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        h1 {
+            font-size: 1.8em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+        }
+
+        .tagline {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        /* 상단 바 */
+        .top-bar {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            padding: 15px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            margin: 15px 0;
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 10px;
+            background: white;
+            border-radius: 10px;
+        }
+
+        .stat-icon {
+            font-size: 1.5em;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.75em;
+            color: #666;
+            margin-top: 3px;
+        }
+
+        /* 에너지 바 */
+        .energy-bar {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            padding: 15px;
+            border-radius: 12px;
+            margin: 15px 0;
+            color: white;
+            position: relative;
+        }
+
+        .energy-hearts {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .heart {
+            transition: all 0.3s;
+        }
+
+        .heart.empty {
+            opacity: 0.3;
+        }
+
+        .energy-text {
+            text-align: center;
+            font-size: 0.9em;
+        }
+
+        .energy-timer {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .energy-btn {
+            background: white;
+            color: #e74c3c;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            margin-top: 10px;
+            width: 100%;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        /* 레벨 표시 */
+        .level-display {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            color: white;
+            margin: 15px 0;
+        }
+
+        .level-number {
+            font-size: 3em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .level-label {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .difficulty-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 15px;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+
+        /* 진행도 바 */
+        .progress-section {
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            margin: 15px 0;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .progress-bar-bg {
+            background: #e0e0e0;
+            height: 25px;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar-fill {
+            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+            height: 100%;
+            transition: width 0.5s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.85em;
+        }
+
+        /* 메인 화면 */
+        .main-screen {
+            display: block;
+        }
+
+        .play-btn {
+            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+            color: white;
+            border: none;
+            padding: 20px;
+            border-radius: 15px;
+            font-size: 1.5em;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin: 20px 0;
+            box-shadow: 0 5px 20px rgba(76, 175, 80, 0.4);
+            transition: all 0.3s;
+        }
+
+        .play-btn:active {
+            transform: translateY(3px);
+        }
+
+        .play-btn:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* 부스터 섹션 */
+        .boosters-section {
+            padding: 15px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 12px;
+            margin: 15px 0;
+        }
+
+        .boosters-title {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .boosters-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .booster-card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .booster-card:active {
+            transform: scale(0.95);
+        }
+
+        .booster-card.active {
+            border-color: #4caf50;
+            box-shadow: 0 0 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .booster-icon {
+            font-size: 2.5em;
+            margin-bottom: 5px;
+        }
+
+        .booster-name {
+            font-weight: bold;
+            font-size: 0.9em;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .booster-count {
+            font-size: 0.85em;
+            color: #666;
+        }
+
+        .booster-price {
+            background: linear-gradient(135deg, #f39c12 0%, #f1c40f 100%);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin-top: 5px;
+            display: inline-block;
+        }
+
+        /* 게임 화면 */
+        .game-screen {
+            display: none;
+        }
+
+        .game-header {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .game-info {
+            font-size: 0.9em;
+            color: #666;
+            text-align: center;
+        }
+
+        .game-timer {
+            background: #e74c3c;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .game-area {
+            background: #f8f9fa;
+            padding: 30px 20px;
+            border-radius: 15px;
+            min-height: 350px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .question {
+            font-size: 1.6em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 25px;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .option-btn {
+            background: white;
+            border: 3px solid #667eea;
+            padding: 18px;
+            border-radius: 12px;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #667eea;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .option-btn:active {
+            transform: scale(0.95);
+        }
+
+        .option-btn.correct {
+            background: #4caf50;
+            border-color: #4caf50;
+            color: white;
+            animation: correctPulse 0.5s;
+        }
+
+        .option-btn.wrong {
+            background: #e74c3c;
+            border-color: #e74c3c;
+            color: white;
+            animation: wrongShake 0.5s;
+        }
+
+        @keyframes correctPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes wrongShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        /* 결과 모달 */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal.show {
+            display: flex;
+            animation: fadeIn 0.3s;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            animation: slideUp 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .result-icon {
+            font-size: 5em;
+            margin-bottom: 15px;
+        }
+
+        .result-title {
+            font-size: 2em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .result-message {
+            font-size: 1.1em;
+            color: #666;
+            margin: 15px 0;
+        }
+
+        .reward-box {
+            background: linear-gradient(135deg, #ffd93d 0%, #f9ca24 100%);
+            padding: 15px;
+            border-radius: 12px;
+            margin: 15px 0;
+            color: white;
+        }
+
+        .reward-text {
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+
+        .modal-buttons {
+            display: grid;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #f39c12 0%, #f1c40f 100%);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+
+        /* 광고 플레이스홀더 */
+        .ad-placeholder {
+            background: linear-gradient(135deg, #ecf0f1 0%, #bdc3c7 100%);
+            padding: 20px;
+            text-align: center;
+            border-radius: 12px;
+            margin: 15px 0;
+            border: 2px dashed #95a5a6;
+        }
+
+        .ad-text {
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+
+        /* 상점 */
+        .shop-screen {
+            display: none;
+        }
+
+        .shop-section {
+            margin: 20px 0;
+        }
+
+        .shop-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .shop-items {
+            display: grid;
+            gap: 10px;
+        }
+
+        .shop-item {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 15px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .shop-item-info {
+            flex: 1;
+        }
+
+        .shop-item-icon {
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+
+        .shop-item-name {
+            font-weight: bold;
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 3px;
+        }
+
+        .shop-item-desc {
+            font-size: 0.85em;
+            color: #666;
+        }
+
+        .shop-item-btn {
+            background: linear-gradient(135deg, #f39c12 0%, #f1c40f 100%);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            font-size: 1em;
+        }
+
+        /* 알림 */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 15px 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            display: none;
+            z-index: 2000;
+            max-width: 300px;
+            animation: slideInRight 0.3s;
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(400px); }
+            to { transform: translateX(0); }
+        }
+
+        .notification.show {
+            display: block;
+        }
+
+        .notification.success { border-left: 5px solid #4caf50; }
+        .notification.error { border-left: 5px solid #e74c3c; }
+        .notification.info { border-left: 5px solid #3498db; }
+
+        /* 반응형 */
+        @media (max-width: 600px) {
+            .options {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* 프리미엄 배너 */
+        .premium-banner {
+            background: linear-gradient(135deg, #f39c12 0%, #f1c40f 100%);
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            color: white;
+            margin: 15px 0;
+            cursor: pointer;
+        }
+
+        .premium-banner h3 {
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 헤더 -->
+        <div class="header">
+            <h1>🧠 Brain Quest</h1>
+            <p class="tagline">끝없는 도전! 당신은 어디까지?</p>
+        </div>
+
+        <!-- 상단 통계 -->
+        <div class="top-bar">
+            <div class="stat-box">
+                <div class="stat-icon">🏆</div>
+                <div class="stat-value" id="currentLevel">1</div>
+                <div class="stat-label">현재 레벨</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-icon">💎</div>
+                <div class="stat-value" id="coinCount">100</div>
+                <div class="stat-label">코인</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-icon">⭐</div>
+                <div class="stat-value" id="highestLevel">1</div>
+                <div class="stat-label">최고 레벨</div>
+            </div>
+        </div>
+
+        <!-- 에너지 바 -->
+        <div class="energy-bar">
+            <div class="energy-hearts" id="energyHearts">
+                <span class="heart">❤️</span>
+                <span class="heart">❤️</span>
+                <span class="heart">❤️</span>
+                <span class="heart">❤️</span>
+                <span class="heart">❤️</span>
+            </div>
+            <div class="energy-text">
+                <span id="energyText">에너지 충전까지: </span>
+                <span class="energy-timer" id="energyTimer">10:00</span>
+            </div>
+            <button class="energy-btn" onclick="showEnergyOptions()">
+                ⚡ 에너지 충전하기
+            </button>
+        </div>
+
+        <!-- 메인 화면 -->
+        <div class="main-screen" id="mainScreen">
+            <!-- 레벨 표시 -->
+            <div class="level-display">
+                <div class="level-label">LEVEL</div>
+                <div class="level-number" id="levelDisplay">1</div>
+                <div class="difficulty-badge" id="difficultyBadge">🟢 쉬움</div>
+            </div>
+
+            <!-- 진행도 -->
+            <div class="progress-section">
+                <div class="progress-label">
+                    <span>이번 구간 진행도</span>
+                    <span id="progressText">1/10</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="progressFill" style="width: 10%">10%</div>
+                </div>
+            </div>
+
+            <!-- 부스터 -->
+            <div class="boosters-section">
+                <div class="boosters-title">🎁 부스터 사용</div>
+                <div class="boosters-grid">
+                    <div class="booster-card" onclick="selectBooster('time')">
+                        <div class="booster-icon">⏰</div>
+                        <div class="booster-name">시간 추가</div>
+                        <div class="booster-count">보유: <span id="timeCount">3</span></div>
+                        <div class="booster-price">30💎</div>
+                    </div>
+                    <div class="booster-card" onclick="selectBooster('hint')">
+                        <div class="booster-icon">💡</div>
+                        <div class="booster-name">힌트</div>
+                        <div class="booster-count">보유: <span id="hintCount">5</span></div>
+                        <div class="booster-price">20💎</div>
+                    </div>
+                    <div class="booster-card" onclick="selectBooster('bomb')">
+                        <div class="booster-icon">💣</div>
+                        <div class="booster-name">오답 제거</div>
+                        <div class="booster-count">보유: <span id="bombCount">2</span></div>
+                        <div class="booster-price">50💎</div>
+                    </div>
+                    <div class="booster-card" onclick="selectBooster('freeze')">
+                        <div class="booster-icon">❄️</div>
+                        <div class="booster-name">시간 정지</div>
+                        <div class="booster-count">보유: <span id="freezeCount">1</span></div>
+                        <div class="booster-price">80💎</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 플레이 버튼 -->
+            <button class="play-btn" id="playBtn" onclick="startLevel()">
+                🚀 도전 시작!
+            </button>
+
+            <!-- 프리미엄 배너 -->
+            <div class="premium-banner" onclick="showShop()">
+                <h3>⭐ 프리미엄 회원</h3>
+                <p>무제한 에너지 + 광고 제거</p>
+                <p style="font-size: 1.3em; margin-top: 5px;">$4.99/월</p>
+            </div>
+
+            <!-- 버튼들 -->
+            <button class="btn-secondary" onclick="showShop()" style="width: 100%; margin: 10px 0;">
+                🛒 상점
+            </button>
+
+            <!-- 광고 -->
+            <div class="ad-placeholder">
+                <p class="ad-text">📺 배너 광고</p>
+            </div>
+        </div>
+
+        <!-- 게임 화면 -->
+        <div class="game-screen" id="gameScreen">
+            <div class="game-header">
+                <button class="btn-secondary" onclick="backToMain()" style="padding: 8px 15px; width: auto;">← 메인으로</button>
+                <div class="game-info">
+                    레벨 <span id="gameLevelNum">1</span>
+                </div>
+                <div class="game-timer" id="gameTimer">30</div>
+            </div>
+
+            <div class="game-area" id="gameArea">
+                <!-- 게임 내용 -->
+            </div>
+        </div>
+
+        <!-- 상점 화면 -->
+        <div class="shop-screen" id="shopScreen">
+            <div class="game-header">
+                <button class="btn-secondary" onclick="closeShop()">← 뒤로</button>
+                <div style="font-size: 1.3em; font-weight: bold;">🛒 상점</div>
+                <div></div>
+            </div>
+
+            <div class="shop-section">
+                <div class="shop-title">⚡ 에너지</div>
+                <div class="shop-items">
+                    <div class="shop-item">
+                        <div class="shop-item-info">
+                            <div class="shop-item-icon">❤️</div>
+                            <div class="shop-item-name">에너지 5개</div>
+                            <div class="shop-item-desc">즉시 충전</div>
+                        </div>
+                        <button class="shop-item-btn" onclick="buyItem('energy5', 50)">
+                            50💎
+                        </button>
+                    </div>
+                    <div class="shop-item">
+                        <div class="shop-item-info">
+                            <div class="shop-item-icon">⚡</div>
+                            <div class="shop-item-name">무제한 1시간</div>
+                            <div class="shop-item-desc">실제 결제</div>
+                        </div>
+                        <button class="shop-item-btn" onclick="buyWithMoney('unlimited1h', 1.99)">
+                            $1.99
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="shop-section">
+                <div class="shop-title">💎 코인</div>
+                <div class="shop-items">
+                    <div class="shop-item">
+                        <div class="shop-item-info">
+                            <div class="shop-item-icon">💎</div>
+                            <div class="shop-item-name">100 코인</div>
+                            <div class="shop-item-desc">실제 결제</div>
+                        </div>
+                        <button class="shop-item-btn" onclick="buyWithMoney('coins100', 0.99)">
+                            $0.99
+                        </button>
+                    </div>
+                    <div class="shop-item">
+                        <div class="shop-item-info">
+                            <div class="shop-item-icon">💎</div>
+                            <div class="shop-item-name">500 코인</div>
+                            <div class="shop-item-desc">30% 보너스!</div>
+                        </div>
+                        <button class="shop-item-btn" onclick="buyWithMoney('coins500', 3.99)">
+                            $3.99
+                        </button>
+                    </div>
+                    <div class="shop-item">
+                        <div class="shop-item-info">
+                            <div class="shop-item-icon">💎</div>
+                            <div class="shop-item-name">1500 코인</div>
+                            <div class="shop-item-desc">50% 보너스!</div>
+                        </div>
+                        <button class="shop-item-btn" onclick="buyWithMoney('coins1500', 9.99)">
+                            $9.99
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="shop-section">
+                <div class="shop-title">🎁 부스터</div>
+                <div class="shop-items">
+                    <div class="shop-item">
+                        <div class="shop-item-info">
+                            <div class="shop-item-icon">⏰</div>
+                            <div class="shop-item-name">시간 추가 5개</div>
+                        </div>
+                        <button class="shop-item-btn" onclick="buyItem('time5', 100)">
+                            100💎
+                        </button>
+                    </div>
+                    <div class="shop-item">
+                        <div class="shop-item-info">
+                            <div class="shop-item-icon">💡</div>
+                            <div class="shop-item-name">힌트 10개</div>
+                        </div>
+                        <button class="shop-item-btn" onclick="buyItem('hint10', 150)">
+                            150💎
+                        </button>
+                    </div>
+                    <div class="shop-item">
+                        <div class="shop-item-info">
+                            <div class="shop-item-icon">💣</div>
+                            <div class="shop-item-name">오답제거 5개</div>
+                        </div>
+                        <button class="shop-item-btn" onclick="buyItem('bomb5', 200)">
+                            200💎
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="shop-section">
+                <div class="premium-banner" onclick="buyPremium()">
+                    <h3>⭐ 프리미엄 멤버십</h3>
+                    <p style="margin: 10px 0;">✓ 무제한 에너지</p>
+                    <p>✓ 모든 광고 제거</p>
+                    <p>✓ 독점 부스터</p>
+                    <p>✓ 매일 코인 100개</p>
+                    <p style="font-size: 1.5em; margin-top: 10px;">$4.99/월</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 결과 모달 -->
+    <div class="modal" id="resultModal">
+        <div class="modal-content">
+            <div class="result-icon" id="resultIcon">🎉</div>
+            <div class="result-title" id="resultTitle">성공!</div>
+            <div class="result-message" id="resultMessage">레벨 클리어!</div>
+            <div class="reward-box" id="rewardBox">
+                <div class="reward-text" id="rewardText">+10 💎</div>
+            </div>
+            <div class="ad-placeholder" style="margin: 20px 0;">
+                <p class="ad-text">📺 전면 광고</p>
+            </div>
+            <div class="modal-buttons">
+                <button class="btn-success" id="continueBtn" onclick="nextLevel()">
+                    ➡️ 다음 레벨
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 실패 모달 -->
+    <div class="modal" id="failModal">
+        <div class="modal-content">
+            <div class="result-icon">😢</div>
+            <div class="result-title">실패...</div>
+            <div class="result-message" id="failMessage">아쉽게도 틀렸습니다</div>
+            <div class="modal-buttons">
+                <button class="btn-warning" onclick="watchAdToContinue()">
+                    📺 광고 보고 재도전 (무료)
+                </button>
+                <button class="btn-success" onclick="useEnergyToRetry()">
+                    ❤️ 에너지 사용하고 재도전
+                </button>
+                <button class="btn-secondary" onclick="closeFailModal()">
+                    메뉴로 돌아가기
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 에너지 부족 모달 -->
+    <div class="modal" id="noEnergyModal">
+        <div class="modal-content">
+            <div class="result-icon">💔</div>
+            <div class="result-title">에너지 부족</div>
+            <div class="result-message">
+                에너지가 모두 소진되었습니다<br>
+                <span id="waitTime" style="color: #e74c3c; font-weight: bold;">10:00</span> 후 충전됩니다
+            </div>
+            <div class="modal-buttons">
+                <button class="btn-warning" onclick="watchAdForEnergy()">
+                    📺 광고 보고 1개 받기
+                </button>
+                <button class="btn-success" onclick="buyEnergyFromModal()">
+                    💎 코인으로 구매 (50💎 = 5❤️)
+                </button>
+                <button class="btn-primary" onclick="buyWithMoney('unlimited1h', 1.99)">
+                    💳 무제한 1시간 ($1.99)
+                </button>
+                <button class="btn-secondary" onclick="closeNoEnergyModal()">
+                    나중에
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 알림 -->
+    <div class="notification" id="notification">
+        <p id="notificationText"></p>
+    </div>
+
+    <script>
+        // 게임 데이터
+        let gameData = {
+            currentLevel: 1,
+            highestLevel: 1,
+            coins: 5,
+            energy: 5,
+            maxEnergy: 5,
+            isPremium: false,
+            boosters: {
+                time: 3,
+                hint: 5,
+                bomb: 2,
+                freeze: 1
+            },
+            lastEnergyTime: Date.now()
+        };
+
+        // 게임 상태
+        let gameTimer = null;
+        let timeLeft = 30;
+        let energyTimer = null;
+        let selectedBooster = null;
+        let currentQuestion = null;
+
+        // 난이도 설정
+        function getDifficulty(level) {
+            if (level <= 10) return { name: '🟢 쉬움', time: 30, range: 20 };
+            if (level <= 30) return { name: '🟡 보통', time: 25, range: 50 };
+            if (level <= 60) return { name: '🟠 어려움', time: 20, range: 100 };
+            if (level <= 100) return { name: '🔴 매우 어려움', time: 15, range: 200 };
+            return { name: '🟣 지옥', time: 12, range: 500 };
+        }
+
+        // 데이터 로드
+        function loadData() {
+            const saved = localStorage.getItem('brainQuestData');
+            if (saved) {
+                gameData = JSON.parse(saved);
+            }
+            updateUI();
+            startEnergyTimer();
+        }
+
+        // 데이터 저장
+        function saveData() {
+            localStorage.setItem('brainQuestData', JSON.stringify(gameData));
+        }
+
+        // UI 업데이트
+        function updateUI() {
+            document.getElementById('currentLevel').textContent = gameData.currentLevel;
+            document.getElementById('highestLevel').textContent = gameData.highestLevel;
+            document.getElementById('coinCount').textContent = gameData.coins;
+            document.getElementById('levelDisplay').textContent = gameData.currentLevel;
+            document.getElementById('gameLevelNum').textContent = gameData.currentLevel;
+            
+            // 난이도 표시
+            const diff = getDifficulty(gameData.currentLevel);
+            document.getElementById('difficultyBadge').textContent = diff.name;
+            
+            // 진행도
+            const progress = ((gameData.currentLevel - 1) % 10) + 1;
+            const progressPercent = progress * 10;
+            document.getElementById('progressText').textContent = `${progress}/10`;
+            document.getElementById('progressFill').style.width = progressPercent + '%';
+            document.getElementById('progressFill').textContent = progressPercent + '%';
+            
+            // 에너지
+            updateEnergyDisplay();
+            
+            // 부스터
+            document.getElementById('timeCount').textContent = gameData.boosters.time;
+            document.getElementById('hintCount').textContent = gameData.boosters.hint;
+            document.getElementById('bombCount').textContent = gameData.boosters.bomb;
+            document.getElementById('freezeCount').textContent = gameData.boosters.freeze;
+            
+            // 플레이 버튼
+            const playBtn = document.getElementById('playBtn');
+            if (gameData.energy <= 0 && !gameData.isPremium) {
+                playBtn.disabled = true;
+                playBtn.textContent = '❤️ 에너지 부족!';
+            } else {
+                playBtn.disabled = false;
+                playBtn.textContent = '🚀 도전 시작!';
+            }
+        }
+
+        // 에너지 표시
+        function updateEnergyDisplay() {
+            const hearts = document.querySelectorAll('.heart');
+            hearts.forEach((heart, i) => {
+                if (i < gameData.energy) {
+                    heart.classList.remove('empty');
+                } else {
+                    heart.classList.add('empty');
+                }
+            });
+        }
+
+        // 에너지 타이머
+        function startEnergyTimer() {
+            if (energyTimer) clearInterval(energyTimer);
+            
+            energyTimer = setInterval(() => {
+                if (gameData.energy < gameData.maxEnergy && !gameData.isPremium) {
+                    const elapsed = Date.now() - gameData.lastEnergyTime;
+                    const rechargeTime = 10 * 60 * 1000; // 10분
+                    
+                    if (elapsed >= rechargeTime) {
+                        gameData.energy = Math.min(gameData.energy + 1, gameData.maxEnergy);
+                        gameData.lastEnergyTime = Date.now();
+                        saveData();
+                        updateUI();
+                        showNotification('에너지 1개 충전 완료! ❤️', 'success');
+                    }
+                    
+                    // 남은 시간 표시
+                    const remaining = rechargeTime - (elapsed % rechargeTime);
+                    const minutes = Math.floor(remaining / 60000);
+                    const seconds = Math.floor((remaining % 60000) / 1000);
+                    document.getElementById('energyTimer').textContent = 
+                        `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                    document.getElementById('energyText').textContent = 
+                        gameData.energy < gameData.maxEnergy ? '에너지 충전까지: ' : '에너지 가득! ';
+                } else {
+                    document.getElementById('energyTimer').textContent = '';
+                    document.getElementById('energyText').textContent = 
+                        gameData.isPremium ? '⭐ 무제한 에너지' : '에너지 가득!';
+                }
+            }, 1000);
+        }
+
+        // 레벨 시작
+        function startLevel() {
+            if (gameData.energy <= 0 && !gameData.isPremium) {
+                showNoEnergyModal();
+                return;
+            }
+            
+            // 에너지 소모
+            if (!gameData.isPremium) {
+                gameData.energy--;
+                gameData.lastEnergyTime = Date.now();
+                saveData();
+                updateUI();
+            }
+            
+            document.getElementById('mainScreen').style.display = 'none';
+            document.getElementById('gameScreen').style.display = 'block';
+            
+            generateQuestion();
+            startGameTimer();
+        }
+
+        // 게임 타입 결정 (레벨에 따라 순환)
+        function getGameType(level) {
+            const types = ['math', 'color', 'pattern', 'word', 'reaction'];
+            return types[(level - 1) % 5];
+        }
+
+        // 문제 생성
+        function generateQuestion() {
+            const diff = getDifficulty(gameData.currentLevel);
+            timeLeft = diff.time;
+            
+            // 부스터 효과
+            if (selectedBooster === 'time') {
+                timeLeft += 15;
+                gameData.boosters.time--;
+                selectedBooster = null;
+                saveData();
+                updateUI();
+            }
+            
+            const gameType = getGameType(gameData.currentLevel);
+            
+            if (gameType === 'math') {
+                generateMathGame(diff);
+            } else if (gameType === 'color') {
+                generateColorGame(diff);
+            } else if (gameType === 'pattern') {
+                generatePatternGame(diff);
+            } else if (gameType === 'word') {
+                generateWordGame(diff);
+            } else if (gameType === 'reaction') {
+                generateReactionGame(diff);
+            }
+        }
+
+        // 1. 숫자 게임
+        function generateMathGame(diff) {
+            const num1 = Math.floor(Math.random() * diff.range) + 1;
+            const num2 = Math.floor(Math.random() * diff.range) + 1;
+            const num3 = Math.floor(Math.random() * diff.range) + 1;
+            
+            const operations = [
+                { text: `${num1} + ${num2}`, answer: num1 + num2 },
+                { text: `${num1} × ${num2}`, answer: num1 * num2 },
+                { text: `${num1 + num2} - ${num3}`, answer: num1 + num2 - num3 },
+                { text: `${num1} + ${num2} + ${num3}`, answer: num1 + num2 + num3 }
+            ];
+            
+            currentQuestion = operations[Math.floor(Math.random() * operations.length)];
+            const correctAnswer = currentQuestion.answer;
+            
+            // 오답 생성
+            let wrongAnswers = [
+                correctAnswer + Math.floor(Math.random() * 10) + 1,
+                correctAnswer - Math.floor(Math.random() * 10) - 1,
+                correctAnswer + Math.floor(Math.random() * 20) + 10
+            ];
+            
+            // 부스터: 오답 제거
+            if (selectedBooster === 'bomb') {
+                wrongAnswers = [wrongAnswers[0]];
+                gameData.boosters.bomb--;
+                selectedBooster = null;
+                saveData();
+                updateUI();
+            }
+            
+            const answers = [correctAnswer, ...wrongAnswers].sort(() => Math.random() - 0.5);
+            
+            const gameArea = document.getElementById('gameArea');
+            gameArea.innerHTML = `
+                <div class="question">🔢 ${currentQuestion.text} = ?</div>
+                <div class="options">
+                    ${answers.map(ans => `
+                        <button class="option-btn" onclick="checkAnswer(${ans === correctAnswer}, ${correctAnswer})">${ans}</button>
+                    `).join('')}
+                </div>
+            `;
+            
+            // 힌트 부스터
+            if (selectedBooster === 'hint') {
+                showNotification(`힌트: 정답은 ${correctAnswer}입니다!`, 'info');
+                gameData.boosters.hint--;
+                selectedBooster = null;
+                saveData();
+                updateUI();
+            }
+        }
+
+        // 2. 색깔 기억 게임
+        function generateColorGame(diff) {
+            const colors = ['#e74c3c', '#3498db', '#2ecc71', '#f39c12', '#9b59b6', '#1abc9c'];
+            const gridSize = Math.min(9, 4 + Math.floor(gameData.currentLevel / 20));
+            const showCount = Math.min(Math.floor(gridSize / 3), 2 + Math.floor(gameData.currentLevel / 30));
+            
+            const selectedIndices = [];
+            while (selectedIndices.length < showCount) {
+                const idx = Math.floor(Math.random() * gridSize);
+                if (!selectedIndices.includes(idx)) {
+                    selectedIndices.push(idx);
+                }
+            }
+            
+            currentQuestion = { answer: selectedIndices.sort((a,b) => a-b).join(','), type: 'color', gridSize };
+            
+            const gameArea = document.getElementById('gameArea');
+            gameArea.innerHTML = `
+                <div class="question">🎨 색깔을 기억하세요!</div>
+                <div style="display: grid; grid-template-columns: repeat(3, 70px); gap: 8px;" id="colorGrid"></div>
+                <button class="btn-primary" id="colorSubmit" style="display:none; margin-top: 20px;" onclick="checkColorMemory()">확인</button>
+            `;
+            
+            const grid = document.getElementById('colorGrid');
+            window.colorSelectedCells = [];
+            
+            for (let i = 0; i < gridSize; i++) {
+                const cell = document.createElement('div');
+                cell.style.width = '70px';
+                cell.style.height = '70px';
+                cell.style.borderRadius = '10px';
+                cell.style.cursor = 'pointer';
+                cell.style.border = '3px solid transparent';
+                cell.style.transition = 'all 0.3s';
+                cell.dataset.index = i;
+                
+                if (selectedIndices.includes(i)) {
+                    cell.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    cell.dataset.wasColored = 'true';
+                } else {
+                    cell.style.background = '#ddd';
+                }
+                
+                grid.appendChild(cell);
+            }
+            
+            // 힌트
+            if (selectedBooster === 'hint') {
+                showNotification(`힌트: ${showCount}개의 색깔이 있습니다!`, 'info');
+                gameData.boosters.hint--;
+                selectedBooster = null;
+                saveData();
+                updateUI();
+            }
+            
+            setTimeout(() => {
+                const cells = grid.querySelectorAll('div');
+                cells.forEach(cell => {
+                    cell.style.background = '#ddd';
+                    cell.onclick = () => toggleColorCell(cell);
+                });
+                document.getElementById('colorSubmit').style.display = 'block';
+                gameArea.querySelector('.question').textContent = '🎨 색깔이 있던 칸을 선택하세요!';
+            }, 2500);
+        }
+
+        function toggleColorCell(cell) {
+            const index = cell.dataset.index;
+            
+            if (window.colorSelectedCells.includes(index)) {
+                window.colorSelectedCells = window.colorSelectedCells.filter(i => i !== index);
+                cell.style.background = '#ddd';
+                cell.style.borderColor = 'transparent';
+            } else {
+                window.colorSelectedCells.push(index);
+                cell.style.background = '#667eea';
+                cell.style.borderColor = '#667eea';
+                cell.style.boxShadow = '0 0 15px rgba(102, 126, 234, 0.5)';
+            }
+        }
+
+        function checkColorMemory() {
+            const correctAnswer = currentQuestion.answer;
+            const userAnswer = window.colorSelectedCells.sort((a,b) => a-b).join(',');
+            checkAnswer(userAnswer === correctAnswer, correctAnswer);
+        }
+
+        // 3. 패턴 찾기
+        function generatePatternGame(diff) {
+            const emojis = ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐨', '🐯', '🦁', '🐮', '🐷', '🐸'];
+            const same = emojis[Math.floor(Math.random() * emojis.length)];
+            const different = emojis.filter(e => e !== same)[Math.floor(Math.random() * (emojis.length - 1))];
+            
+            const items = [same, same, same, different].sort(() => Math.random() - 0.5);
+            const correctIndex = items.indexOf(different);
+            
+            currentQuestion = { answer: correctIndex, type: 'pattern' };
+            
+            const gameArea = document.getElementById('gameArea');
+            gameArea.innerHTML = `
+                <div class="question">🧩 다른 것을 찾으세요!</div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; max-width: 300px;">
+                    ${items.map((emoji, i) => `
+                        <div style="width: 130px; height: 130px; background: white; border: 3px solid #667eea; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 4em; cursor: pointer; transition: all 0.3s;" onclick="checkAnswer(${i === correctIndex}, ${correctIndex})">${emoji}</div>
+                    `).join('')}
+                </div>
+            `;
+            
+            if (selectedBooster === 'hint') {
+                showNotification(`힌트: ${different} 이모지가 다릅니다!`, 'info');
+                gameData.boosters.hint--;
+                selectedBooster = null;
+                saveData();
+                updateUI();
+            }
+        }
+
+        // 4. 단어 게임
+        function generateWordGame(diff) {
+            const wordLists = {
+                easy: [
+                    { scrambled: 'PELPA', answer: 'APPLE' },
+                    { scrambled: 'RETAW', answer: 'WATER' },
+                    { scrambled: 'KOLCC', answer: 'CLOCK' },
+                    { scrambled: 'NPHOE', answer: 'PHONE' }
+                ],
+                medium: [
+                    { scrambled: 'NOMKEY', answer: 'MONKEY' },
+                    { scrambled: 'TEGRA', answer: 'GREAT' },
+                    { scrambled: 'RIABN', answer: 'BRAIN' },
+                    { scrambled: 'PHAYP', answer: 'HAPPY' }
+                ],
+                hard: [
+                    { scrambled: 'NIQESTUO', answer: 'QUESTION' },
+                    { scrambled: 'RUETPCOM', answer: 'COMPUTER' },
+                    { scrambled: 'TANTIMROP', answer: 'IMPORTANT' }
+                ]
+            };
+            
+            let wordList = wordLists.easy;
+            if (gameData.currentLevel > 30) wordList = wordLists.medium;
+            if (gameData.currentLevel > 60) wordList = wordLists.hard;
+            
+            const selected = wordList[Math.floor(Math.random() * wordList.length)];
+            currentQuestion = { answer: selected.answer, type: 'word' };
+            
+            const wrongAnswers = [
+                selected.answer.split('').sort(() => Math.random() - 0.5).join('').substring(0, selected.answer.length),
+                selected.answer.split('').reverse().join(''),
+                selected.scrambled
+            ].filter(w => w !== selected.answer).slice(0, 3);
+            
+            let answers = [selected.answer, ...wrongAnswers].sort(() => Math.random() - 0.5);
+            
+            // 부스터: 오답 제거
+            if (selectedBooster === 'bomb') {
+                answers = [selected.answer, wrongAnswers[0]];
+                gameData.boosters.bomb--;
+                selectedBooster = null;
+                saveData();
+                updateUI();
+            }
+            
+            const gameArea = document.getElementById('gameArea');
+            gameArea.innerHTML = `
+                <div class="question">🔤 단어를 맞춰보세요!</div>
+                <div class="question" style="font-size: 2.5em; color: #667eea;">${selected.scrambled}</div>
+                <div class="options">
+                    ${answers.map(ans => `
+                        <button class="option-btn" onclick="checkAnswer('${ans}' === '${selected.answer}', '${selected.answer}')">${ans}</button>
+                    `).join('')}
+                </div>
+            `;
+            
+            if (selectedBooster === 'hint') {
+                showNotification(`힌트: 정답은 ${selected.answer}입니다!`, 'info');
+                gameData.boosters.hint--;
+                selectedBooster = null;
+                saveData();
+                updateUI();
+            }
+        }
+
+        // 5. 반응속도 게임
+        function generateReactionGame(diff) {
+            currentQuestion = { answer: 'reaction', type: 'reaction' };
+            
+            const gameArea = document.getElementById('gameArea');
+            gameArea.innerHTML = `
+                <div class="question">⚡ 초록색이 되면 클릭!</div>
+                <div id="reactionBox" style="width: 200px; height: 200px; background: #e74c3c; border-radius: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.5em; color: white; font-weight: bold; transition: all 0.3s;">
+                    대기중...
+                </div>
+            `;
+            
+            const box = document.getElementById('reactionBox');
+            const delay = Math.random() * 2000 + 1500;
+            
+            setTimeout(() => {
+                if (!box) return;
+                box.style.background = '#2ecc71';
+                box.textContent = '클릭!';
+                const startTime = Date.now();
+                
+                box.onclick = () => {
+                    const reactionTime = Date.now() - startTime;
+                    const maxTime = 1000 + (gameData.currentLevel * 10);
+                    const isGood = reactionTime < maxTime;
+                    
+                    showNotification(`반응 속도: ${reactionTime}ms`, isGood ? 'success' : 'error');
+                    setTimeout(() => checkAnswer(isGood, reactionTime), 500);
+                };
+            }, delay);
+            
+            if (selectedBooster === 'hint') {
+                showNotification(`힌트: ${Math.floor(delay/1000)}초 후에 바뀝니다!`, 'info');
+                gameData.boosters.hint--;
+                selectedBooster = null;
+                saveData();
+                updateUI();
+            }
+        }
+
+        // 게임 타이머
+        function startGameTimer() {
+            updateTimerDisplay();
+            
+            // 시간 정지 부스터
+            if (selectedBooster === 'freeze') {
+                gameData.boosters.freeze--;
+                selectedBooster = null;
+                saveData();
+                updateUI();
+                showNotification('시간이 정지되었습니다! (30초)', 'success');
+                setTimeout(() => {
+                    startActualTimer();
+                }, 30000);
+                return;
+            }
+            
+            startActualTimer();
+        }
+
+        function startActualTimer() {
+            gameTimer = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                
+                if (timeLeft <= 0) {
+                    clearInterval(gameTimer);
+                    levelFailed();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            document.getElementById('gameTimer').textContent = timeLeft;
+        }
+
+        // 정답 확인
+        function checkAnswer(isCorrect, correctAnswerDisplay) {
+            clearInterval(gameTimer);
+            
+            // 반응속도 게임은 바로 처리
+            if (currentQuestion.type === 'reaction') {
+                setTimeout(() => {
+                    if (isCorrect) {
+                        levelCleared();
+                    } else {
+                        levelFailed();
+                    }
+                }, 500);
+                return;
+            }
+            
+            // 색깔 기억 게임은 버튼 없이 처리
+            if (currentQuestion.type === 'color') {
+                setTimeout(() => {
+                    if (isCorrect) {
+                        levelCleared();
+                    } else {
+                        levelFailed();
+                    }
+                }, 500);
+                return;
+            }
+            
+            const buttons = document.querySelectorAll('.option-btn');
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                const btnText = btn.textContent.trim();
+                const correctText = correctAnswerDisplay !== undefined ? correctAnswerDisplay.toString() : currentQuestion.answer.toString();
+                
+                if (btnText === correctText) {
+                    btn.classList.add('correct');
+                } else if (!isCorrect) {
+                    // 사용자가 클릭한 버튼만 오답 표시
+                    if (btn === event.target) {
+                        btn.classList.add('wrong');
+                    }
+                }
+            });
+            
+            setTimeout(() => {
+                if (isCorrect) {
+                    levelCleared();
+                } else {
+                    levelFailed();
+                }
+            }, 1000);
+        }
+
+        // 레벨 클리어
+        function levelCleared() {
+            const reward = Math.floor(gameData.currentLevel / 5) + 5;
+            gameData.coins += reward;
+            gameData.currentLevel++;
+            if (gameData.currentLevel > gameData.highestLevel) {
+                gameData.highestLevel = gameData.currentLevel;
+            }
+            
+            saveData();
+            updateUI();
+            
+            document.getElementById('resultIcon').textContent = '🎉';
+            document.getElementById('resultTitle').textContent = `레벨 ${gameData.currentLevel - 1} 클리어!`;
+            document.getElementById('resultMessage').textContent = '멋져요! 다음 레벨로 도전하세요!';
+            document.getElementById('rewardText').textContent = `+${reward} 💎`;
+            
+            document.getElementById('gameScreen').style.display = 'none';
+            document.getElementById('resultModal').classList.add('show');
+        }
+
+        // 레벨 실패
+        function levelFailed() {
+            let failMessage = '';
+            
+            if (currentQuestion.type === 'math') {
+                failMessage = `정답은 ${currentQuestion.answer}였습니다`;
+            } else if (currentQuestion.type === 'color') {
+                failMessage = `다시 도전해보세요!`;
+            } else if (currentQuestion.type === 'pattern') {
+                failMessage = `다시 집중해서 도전해보세요!`;
+            } else if (currentQuestion.type === 'word') {
+                failMessage = `정답은 ${currentQuestion.answer}였습니다`;
+            } else if (currentQuestion.type === 'reaction') {
+                failMessage = `너무 늦었어요! 더 빨리 클릭하세요!`;
+            }
+            
+            document.getElementById('gameScreen').style.display = 'none';
+            document.getElementById('failModal').classList.add('show');
+            document.getElementById('failMessage').textContent = failMessage;
+        }
+
+        // 다음 레벨
+        function nextLevel() {
+            document.getElementById('resultModal').classList.remove('show');
+            startLevel();
+        }
+
+        // 광고 보고 재도전
+        function watchAdToContinue() {
+            showNotification('📺 광고 시청 중... (실제 앱에서는 광고 표시)', 'info');
+            
+            setTimeout(() => {
+                document.getElementById('failModal').classList.remove('show');
+                showNotification('광고 시청 완료! 재도전 기회를 얻었습니다!', 'success');
+                startLevel();
+            }, 2000);
+        }
+
+        // 에너지로 재도전
+        function useEnergyToRetry() {
+            if (gameData.energy <= 0 && !gameData.isPremium) {
+                showNotification('에너지가 부족합니다!', 'error');
+                return;
+            }
+            
+            if (!gameData.isPremium) {
+                gameData.energy--;
+                saveData();
+                updateUI();
+            }
+            
+            document.getElementById('failModal').classList.remove('show');
+            startLevel();
+        }
+
+        // 실패 모달 닫기
+        function closeFailModal() {
+            document.getElementById('failModal').classList.remove('show');
+            backToMain();
+        }
+
+        // 메인으로
+        function backToMain() {
+            clearInterval(gameTimer);
+            gameTimer = null;
+            document.getElementById('gameScreen').style.display = 'none';
+            document.getElementById('mainScreen').style.display = 'block';
+            document.getElementById('resultModal').classList.remove('show');
+            document.getElementById('failModal').classList.remove('show');
+        }
+
+        // 에너지 부족 모달
+        function showNoEnergyModal() {
+            document.getElementById('noEnergyModal').classList.add('show');
+        }
+
+        function closeNoEnergyModal() {
+            document.getElementById('noEnergyModal').classList.remove('show');
+        }
+
+        function showEnergyOptions() {
+            showNoEnergyModal();
+        }
+
+        function watchAdForEnergy() {
+            showNotification('📺 광고 시청 중...', 'info');
+            
+            setTimeout(() => {
+                gameData.energy = Math.min(gameData.energy + 1, gameData.maxEnergy);
+                gameData.lastEnergyTime = Date.now();
+                saveData();
+                updateUI();
+                closeNoEnergyModal();
+                showNotification('에너지 1개 획득! ❤️', 'success');
+            }, 2000);
+        }
+
+        function buyEnergyFromModal() {
+            if (gameData.coins < 50) {
+                showNotification('코인이 부족합니다!', 'error');
+                return;
+            }
+            
+            gameData.coins -= 50;
+            gameData.energy = gameData.maxEnergy;
+            gameData.lastEnergyTime = Date.now();
+            saveData();
+            updateUI();
+            closeNoEnergyModal();
+            showNotification('에너지 5개 충전 완료! ❤️', 'success');
+        }
+
+        // 부스터 선택
+        function selectBooster(type) {
+            if (gameData.boosters[type] <= 0) {
+                showNotification('부스터가 없습니다! 상점에서 구매하세요.', 'error');
+                return;
+            }
+            
+            selectedBooster = type;
+            document.querySelectorAll('.booster-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+            
+            const names = {
+                time: '시간 추가',
+                hint: '힌트',
+                bomb: '오답 제거',
+                freeze: '시간 정지'
+            };
+            showNotification(`${names[type]} 부스터 준비됨!`, 'success');
+        }
+
+        // 상점
+        function showShop() {
+            document.getElementById('mainScreen').style.display = 'none';
+            document.getElementById('shopScreen').style.display = 'block';
+        }
+
+        function closeShop() {
+            document.getElementById('shopScreen').style.display = 'none';
+            document.getElementById('mainScreen').style.display = 'block';
+        }
+
+        function buyItem(item, cost) {
+            if (gameData.coins < cost) {
+                showNotification('코인이 부족합니다!', 'error');
+                return;
+            }
+            
+            gameData.coins -= cost;
+            
+            if (item === 'energy5') {
+                gameData.energy = gameData.maxEnergy;
+                gameData.lastEnergyTime = Date.now();
+            } else if (item === 'time5') {
+                gameData.boosters.time += 5;
+            } else if (item === 'hint10') {
+                gameData.boosters.hint += 10;
+            } else if (item === 'bomb5') {
+                gameData.boosters.bomb += 5;
+            }
+            
+            saveData();
+            updateUI();
+            showNotification('구매 완료!', 'success');
+        }
+
+        function buyWithMoney(item, price) {
+            showNotification(`실제 앱에서는 $${price} 결제가 진행됩니다. (데모에서는 무료 지급)`, 'info');
+            
+            if (item === 'unlimited1h') {
+                showNotification('1시간 동안 무제한 에너지! (데모)', 'success');
+            } else if (item === 'coins100') {
+                gameData.coins += 100;
+            } else if (item === 'coins500') {
+                gameData.coins += 500;
+            } else if (item === 'coins1500') {
+                gameData.coins += 1500;
+            }
+            
+            saveData();
+            updateUI();
+        }
+
+        function buyPremium() {
+            showNotification('실제 앱에서는 $4.99/월 구독이 진행됩니다. (데모에서는 무료 활성화)', 'info');
+            gameData.isPremium = true;
+            gameData.energy = gameData.maxEnergy;
+            saveData();
+            updateUI();
+        }
+
+        // 알림
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const text = document.getElementById('notificationText');
+            text.textContent = message;
+            notification.className = `notification ${type} show`;
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // 초기화
+        loadData();
+    </script>
+</body>
+</html>
